@@ -1,3 +1,5 @@
+#include <splash.h>
+
 /**************************************************************************
  This is an example for our Monochrome OLEDs based on SSD1306 drivers
 
@@ -19,6 +21,7 @@
  **************************************************************************/
 #include <SPI.h>
 #include <Wire.h>
+#include <gfxfont.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
@@ -28,6 +31,9 @@
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
 #define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+const int printButtonPin = 12;
+int buttonState = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -41,19 +47,31 @@ void setup() {
   // Clear the buffer
   display.clearDisplay();
 
-  drawstamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 4000);
-  drawstamp("WILL HARRIS-BRAUN", 22323, 8, 7, "2018-11-29", 2000);
-  drawstamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 500);
-  drawstamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 100);
+  pinMode(printButtonPin, INPUT);
+
+  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 4000);
+  drawStamp("WILL HARRIS-BRAUN", 22323, 8, 7, "2018-11-29", 2000);
+  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 500);
+  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 100);
 
 }
 
 void loop() {
+
+  // if dials turned
+    // update data and display it somehow
+
+  buttonState = digitalRead(printButtonPin);
+  
+  // if print button is pressed
+  if (buttonState == HIGH) { 
+    // call drawStamp with the right parameters
+    drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 4000);
+
+  }
 }
 
-void drawstamp(String name, long enlarger, float fstop, float exposure, String date, int stamptime) {
-  
-  name = "WILL HARRIS-BRAUN";
+void drawStamp(String name, long enlarger, float fstop, float exposure, String date, int stampTime) {
   
   display.clearDisplay();
 
@@ -61,18 +79,20 @@ void drawstamp(String name, long enlarger, float fstop, float exposure, String d
   display.setTextColor(WHITE); // Draw white text
   display.setCursor(0, 0);     // Start at top-left corner
   display.cp437(true);         // Use full 256 char 'Code Page 437' font
+
+  // set up floats to be printed
+  String p_fstop = round(fstop)       // TODO instead of rounding floats, format them nicely to have no
+  String p_exposure = round(exposure) // trailing zeros (or maybe just truncate them to one decimal place?)
+
   
-
-
   display.print(name);
   display.print("\nEN" + String(enlarger));
-  display.print(" F" + String(round(fstop))); // TODO: round floats to have no trailing zeros
-  display.print(" EXP" + String(exposure)); // TODO ^
+  display.print(" F" + p_fstop);
+  display.print(" EXP" + p_exposure);
   display.print("\n" + date);
 
-
   display.display();
-  delay(stamptime);
+  delay(stampTime);
   display.clearDisplay();
   display.display();
 }
