@@ -56,9 +56,9 @@ void setup() {
 
 }
 
-void loop() {
+int test_exp = 500;
 
-  int test_exp = 100;
+void loop() {
   
   // if dials turned
     // update data and display it somehow
@@ -69,7 +69,8 @@ void loop() {
   if (buttonState == HIGH) { 
     // call drawStamp with the right parameters
     drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", test_exp, test_exp);
-  test_exp = test_exp + 100;
+  buttonState = LOW;
+  test_exp += 500;
   }
 }
 
@@ -94,7 +95,7 @@ void drawStamp(String name, long enlarger, float fstop, float exposure, String d
   display.print(" EXP" + p_exposure);
   display.print("\n" + date);
   
-  display.print("\n TEST Exposure time: " + String(test_exp) + " ms");
+  display.print("\nTEST Exposure time: " + String(test_exp) + " ms");
 
   display.display();
   delay(stampTime);
