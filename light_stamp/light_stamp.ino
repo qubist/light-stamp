@@ -49,15 +49,17 @@ void setup() {
 
   pinMode(printButtonPin, INPUT);
 
-  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 4000);
-  drawStamp("WILL HARRIS-BRAUN", 22323, 8, 7, "2018-11-29", 2000);
-  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 500);
-  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 100);
+//  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 4000);
+//  drawStamp("WILL HARRIS-BRAUN", 22323, 8, 7, "2018-11-29", 2000);
+//  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 500);
+//  drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 100);
 
 }
 
 void loop() {
 
+  int test_exp = 100;
+  
   // if dials turned
     // update data and display it somehow
 
@@ -66,12 +68,13 @@ void loop() {
   // if print button is pressed
   if (buttonState == HIGH) { 
     // call drawStamp with the right parameters
-    drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", 4000);
-
+    drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", test_exp, test_exp);
+  test_exp = test_exp + 100;
   }
 }
 
-void drawStamp(String name, long enlarger, float fstop, float exposure, String date, int stampTime) {
+//void drawStamp(String name, long enlarger, float fstop, float exposure, String date, int stampTime) {
+void drawStamp(String name, long enlarger, float fstop, float exposure, String date, int test_exp, int stampTime) {
   
   display.clearDisplay();
 
@@ -81,8 +84,8 @@ void drawStamp(String name, long enlarger, float fstop, float exposure, String d
   display.cp437(true);         // Use full 256 char 'Code Page 437' font
 
   // set up floats to be printed
-  String p_fstop = round(fstop)       // TODO instead of rounding floats, format them nicely to have no
-  String p_exposure = round(exposure) // trailing zeros (or maybe just truncate them to one decimal place?)
+  String p_fstop = String(fstop);       // TODO instead of rounding floats, format them nicely to have no
+  String p_exposure = String(exposure); // trailing zeros (or maybe just truncate them to one decimal place?)
 
   
   display.print(name);
@@ -90,6 +93,8 @@ void drawStamp(String name, long enlarger, float fstop, float exposure, String d
   display.print(" F" + p_fstop);
   display.print(" EXP" + p_exposure);
   display.print("\n" + date);
+  
+  display.print("\n TEST Exposure time: " + String(test_exp) + " ms");
 
   display.display();
   delay(stampTime);
