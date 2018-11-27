@@ -56,7 +56,7 @@ void setup() {
 
 }
 
-int test_exp = 500;
+int test_exp = 1;
 
 void loop() {
   
@@ -69,8 +69,17 @@ void loop() {
   if (buttonState == HIGH) { 
     // call drawStamp with the right parameters
     drawStamp("WILL HARRIS-BRAUN", 123465, 1.2, 12.5, "2018-11-29", test_exp, test_exp);
-  buttonState = LOW;
-  test_exp += 500;
+    // set buttonstate back to not pressed
+    buttonState = LOW;
+    // increment exposure amount: 1, 2, 3, 4, 5, 10, 20, 30, 40, 50, 100, 200, 300, etc.
+    if(test_exp/(log10(test_exp)) == 5 or test_exp == 5){
+      test_exp *= 2;
+    }else if(test_exp <5){
+      test_exp+=1;
+    }else{
+      test_exp += pow(10,(floor)(log10(test_exp)));
+      Serial.println(pow(10,(floor)(log10(test_exp))));
+    }
   }
 }
 
@@ -95,10 +104,11 @@ void drawStamp(String name, long enlarger, float fstop, float exposure, String d
   display.print(" EXP" + p_exposure);
   display.print("\n" + date);
   
-  display.print("\nTEST Exposure time: " + String(test_exp) + " ms");
+  display.print("\nTEST Exposure time:      " + String(test_exp) + " ms");
 
   display.display();
   delay(stampTime);
   display.clearDisplay();
   display.display();
+  delay(1000);
 }
